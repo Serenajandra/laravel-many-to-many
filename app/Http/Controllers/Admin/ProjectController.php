@@ -11,6 +11,7 @@ use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\type;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
@@ -54,13 +55,22 @@ class ProjectController extends Controller
         // $project = new Project();
         // $project->fill($form_data);
         // $project->save();
-        $project = Project::create($form_data);
+
         if (array_key_exists('image', $form_data)) {
-            // if ($request->hasFile('cover_image'))
-            $path = Storage::put('post_image', $request->cover_image);
+            // if ($request->hasFile('image'))
+            $path = Storage::put('post_image', $request->image);
             // dd($path);
             $form_data['image'] = $path;
         }
+        // Inserisco user_id nei data da salvare:
+        $form_data['user_id'] = Auth::id();
+
+        $project = Project::create($form_data);
+        // Istruzioni condizionali nel caso siano state selezionate voci nel checkbox technologie:
+        if ($request->has('technologies')) {
+            $project->technologies()->attach($request->technologies);
+        }
+
 
         return redirect()->route('admin.projects.index')->with('message', 'Il progetto è stato creato correttamente');
     }
@@ -73,6 +83,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        // dd($project->technologies);
         return view('admin.projects.show', compact('project'));
     }
 
@@ -84,7 +95,9 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        return view('admin.projects.edit', compact('project'));
+        $types = type::all();
+        $technologies = Technology::all();
+        return view('admin.projects.edit', compact('project', 'types', 'technologies'));
     }
 
     /**
@@ -102,6 +115,13 @@ class ProjectController extends Controller
         $form_data = $request->validated();
         $form_data['slug'] = Project::generateSlug($form_data['title']);
         $project->update($form_data);
+        // nel caso io non voglia nessuna tecnologia selezionata, devo toglierli anche dall'array  per non aver errore..quindi devo specificare:
+        if ($request->has('technologies')) {
+            $project->technologies()->sync($request->technologies);
+        } else {
+            $project->technologies()->detach();
+        }
+
         return redirect()->route('admin.projects.index')->with('message', "Il progetto è stato creato correttamente");
     }
 

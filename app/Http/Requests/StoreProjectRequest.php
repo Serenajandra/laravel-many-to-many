@@ -29,7 +29,8 @@ class StoreProjectRequest extends FormRequest
             'presentation' => ['required'],
             'type_id' => ['nullable', 'exists:types,id'],
             'image' => ['nullable', 'image'],
-            'content' => ['required']
+            'content' => ['required'],
+            'technologies' => ['exists:technologies, id']
         ];
     }
 }

@@ -19,14 +19,35 @@
                 <label for="title">Titolo</label>
                 <input type="text" name="title" id="title" class="form-control" value="{{ $project->title }}">
             </div>
+            <div class="mb-3">
+                <label for="type">Tipologia</label>
+                <select name="type_id" id="type" class="form-select">
+                    <option value="">Seleziona</option>
+                    @foreach ($types as $type)
+                        <option value="{{ $type->id }}" @selected(old('type_id', $project->type_id) == $type->id)>{{ $type->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
             <div class="form-group">
-                <label for="subject">Argomenti</label>
+                <label for="subject">Argomento trattato</label>
                 <input type="text" name="subject" id="subject" class="form-control" value="{{ $project->subject }}">
             </div>
             <div class="form-group">
-                <label for="presentation">Presentazione</label>
+                <label for="presentation">Presentazione in breve</label>
                 <input type="text" name="presentation" id="presentation" class="form-control"
                     value="{{ $project->presentation }}">
+            </div>
+            <div class="form-group mt-3">
+                <h4>Tecnologie usate</h4>
+                @foreach ($technologies as $technology)
+                    <div class="form-check">
+                        <input class="form-check-input" id="{{ $technology->id }}" name="technologies[]" type="checkbox"
+                            value="{{ $technology->id }}" @checked($project->technologies->contains($technology))>
+                        <label for="{{ $technology->id }}" class="form-check-label">{{ $technology->name }}</label>
+                    </div>
+                @endforeach
+
             </div>
             <div class="form-group">
                 <label for="content">Contenuto</label>
