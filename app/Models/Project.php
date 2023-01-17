@@ -15,8 +15,15 @@ class Project extends Model
     {
         return Str::slug($title, '-');
     }
+
+    // Relazioni tra le classi:
     public function type()
     {
         return $this->belongsTo(Type::class);
+    }
+
+    public function technologies()
+    {
+        return $this->belongsToMany(technology::class);
     }
 }
