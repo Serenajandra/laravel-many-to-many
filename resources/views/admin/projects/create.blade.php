@@ -29,9 +29,11 @@
                 <label for="type">Tipologia</label>
                 <select name="type_id" id="type" class="form-select">
                     <option value="">Altra tipologia</option>
+
                     @foreach ($types as $type)
                         <option value="{{ $type->id }}">{{ $type->type }}</option>
                     @endforeach
+
                 </select>
             </div>
 
@@ -40,7 +42,7 @@
                 @foreach ($technologies as $technology)
                     <div class="form-check">
                         <input type="checkbox" name="technologies[]" id="technology-{{ $technology->id }}"
-                            class="form-check-input" value="{{ $technology->id }}">
+                            class="form-check-input" value="{{ $technology->id }}" @checked(in_array($technology->id, old('technologies', [])))>
                         <label for="technology-{{ $technology->id }}"
                             class="form-check-label">{{ $technology->name }}</label>
                     </div>

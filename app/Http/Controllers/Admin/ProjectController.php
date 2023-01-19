@@ -56,12 +56,12 @@ class ProjectController extends Controller
         // $project->fill($form_data);
         // $project->save();
 
-        if (array_key_exists('image', $form_data)) {
-            // if ($request->hasFile('image'))
-            $path = Storage::put('post_image', $request->image);
-            // dd($path);
-            $form_data['image'] = $path;
-        }
+        // if (array_key_exists('image', $form_data)) {
+        //     // if ($request->hasFile('image'))
+        //     $path = Storage::put('post_image', $request->image);
+        //     // dd($path);
+        //     $form_data['image'] = $path;
+        // }
         // Inserisco user_id nei data da salvare:
         $form_data['user_id'] = Auth::id();
 
@@ -69,6 +69,8 @@ class ProjectController extends Controller
         // Istruzioni condizionali nel caso siano state selezionate voci nel checkbox technologie:
         if ($request->has('technologies')) {
             $project->technologies()->attach($request->technologies);
+            //    project->technologies()->attach($form_data['technologies']);
+
         }
 
 
@@ -83,7 +85,8 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        // dd($project->technologies);
+        dd($project->technologies);
+        // dd($project);
         return view('admin.projects.show', compact('project'));
     }
 
@@ -133,6 +136,7 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        // $project->technologies()->detach();
         $project->delete();
         return redirect()->route('admin.projects.index')->with('message', "Progetto cancellato con successo.");
     }

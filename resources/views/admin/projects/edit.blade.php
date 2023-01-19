@@ -40,13 +40,15 @@
             </div>
             <div class="form-group mt-3">
                 <h4>Tecnologie usate</h4>
-                @foreach ($technologies as $technology)
+                {{-- @foreach ($technologies as $technology)
                     <div class="form-check">
                         <input class="form-check-input" id="{{ $technology->id }}" name="technologies[]" type="checkbox"
-                            value="{{ $technology->id }}" @checked($project->technologies->contains($technology))>
+                            value="{{ $technology->id }}" @checked($errors->any() ? in_array($technology->id, old('technologies', [])) : $project->technologies->contains($technology))>
+
+                            @checked($project->technologies->contains($technology))>
                         <label for="{{ $technology->id }}" class="form-check-label">{{ $technology->name }}</label>
                     </div>
-                @endforeach
+                @endforeach --}}
 
             </div>
             <div class="form-group">
